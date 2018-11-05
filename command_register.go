@@ -30,6 +30,10 @@ func RegisterCommandWithCtx(c *cobra.Command, ctx string, f ArgCompleter) {
 
 }
 
+func RegisterArgCompleter(c *cobra.Command, ctx string, f ArgCompleter) {
+	argCompleter[cmdContextPath(c, ctx)] = f
+}
+
 func cmdContextPath(c *cobra.Command, ctx string) string {
 	fc := ctx + "/" + c.CommandPath()
 	return strings.Replace(fc, " ", "/", -1)

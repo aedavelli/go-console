@@ -59,28 +59,30 @@ func cmdSuggestions(c *cobra.Command, s []prompt.Suggest, this bool) []prompt.Su
 			s = append(s, prompt.Suggest{Text: a, Description: c.Short})
 		}
 
-		// Populate flags
-		if fs := c.Flags(); fs != nil {
-			fs.VisitAll(func(f *pflag.Flag) {
-				if f.Shorthand != "" {
-					s = append(s, prompt.Suggest{Text: "-" + f.Shorthand, Description: f.Usage})
-				}
-				if f.Name != "" {
-					s = append(s, prompt.Suggest{Text: "--" + f.Name, Description: f.Usage})
-				}
-			})
-		}
+		if this {
+			// Populate flags
+			if fs := c.Flags(); fs != nil {
+				fs.VisitAll(func(f *pflag.Flag) {
+					if f.Shorthand != "" {
+						s = append(s, prompt.Suggest{Text: "-" + f.Shorthand, Description: f.Usage})
+					}
+					if f.Name != "" {
+						s = append(s, prompt.Suggest{Text: "--" + f.Name, Description: f.Usage})
+					}
+				})
+			}
 
-		// Check whether any argument completer available for this command
-		// If this is global command context should be zero string value
-		ctx := ""
-		if _, ok := context[""][c.Name()]; !ok {
-			ctx = presentCtx
-		}
+			// Check whether any argument completer available for this command
+			// If this is global command context should be zero string value
+			ctx := ""
+			if _, ok := context[""][c.Name()]; !ok {
+				ctx = presentCtx
+			}
 
-		if f, ok := argCompleter[cmdContextPath(c, ctx)]; ok {
-			for _, sug := range f() {
-				s = append(s, prompt.Suggest{Text: sug})
+			if f, ok := argCompleter[cmdContextPath(c, ctx)]; ok {
+				for _, sug := range f() {
+					s = append(s, prompt.Suggest{Text: sug})
+				}
 			}
 		}
 	}
