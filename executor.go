@@ -58,11 +58,11 @@ func init() {
 	}
 
 	RegisterCommand(exitCmd, nil)
-	RegisterCommand(switchCmd, func() []string {
-		s := make([]string, 0)
+	RegisterCommand(switchCmd, func() map[string]string {
+		s := map[string]string{}
 		for key, _ := range context {
 			if key != "" {
-				s = append(s, key)
+				s[key] = "Switch to " + key + " Context"
 			}
 		}
 		return s

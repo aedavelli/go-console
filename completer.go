@@ -80,8 +80,8 @@ func cmdSuggestions(c *cobra.Command, s []prompt.Suggest, this bool) []prompt.Su
 			}
 
 			if f, ok := argCompleter[cmdContextPath(c, ctx)]; ok {
-				for _, sug := range f() {
-					s = append(s, prompt.Suggest{Text: sug})
+				for key, val := range f() {
+					s = append(s, prompt.Suggest{Text: key, Description: val})
 				}
 			}
 		}
